@@ -1,0 +1,122 @@
+{
+  "name": "volk-ai",
+  "displayName": "VOLK AI",
+  "description": "VOLK AI — AI agent specialized in cybersecurity and ethical hacking with inline AI edits, codebase-aware chat, and autonomous multi-step task execution. Powered by Gemini 2.5 Flash.",
+  "version": "1.0.0",
+  "publisher": "volk-ai",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/volk-ai/volk-ai-coding-agent"
+  },
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "volk-ai",
+    "ai",
+    "coding",
+    "agent",
+    "gemini",
+    "autocomplete",
+    "chat",
+    "cybersecurity",
+    "security"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "type": "module",
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -watch -p tsconfig.json",
+    "lint": "eslint src --ext ts",
+    "clean": "rm -rf dist out",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "package": "vsce package"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "volkAi.openChat",
+        "title": "VOLK AI: Open Chat"
+      },
+      {
+        "command": "volkAi.explainCode",
+        "title": "VOLK AI: Explain Code"
+      },
+      {
+        "command": "volkAi.fixCode",
+        "title": "VOLK AI: Fix Code"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "volkAi",
+          "title": "VOLK AI",
+          "icon": "$(sparkle)"
+        }
+      ]
+    },
+    "views": {
+      "volkAi": [
+        {
+          "type": "webview",
+          "id": "volkAi.chat",
+          "name": "Chat"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "volkAi.openChat",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i"
+      }
+    ],
+    "configuration": {
+      "title": "VOLK AI",
+      "properties": {
+        "volkAi.geminiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Gemini API Key for VOLK AI. Alternatively, set GEMINI_API_KEY environment variable."
+        },
+        "volkAi.autonomousMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable autonomous mode for VOLK AI (allows destructive actions without confirmation)"
+        },
+        "volkAi.maxStepsPerTask": {
+          "type": "number",
+          "default": 50,
+          "description": "Maximum number of steps for autonomous task execution by VOLK AI"
+        },
+        "volkAi.inlineCompletions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable inline ghost-text completions for VOLK AI"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@ai-agent/shared": "*",
+    "@ai-agent/agent-core": "*",
+    "@ai-agent/sandbox": "*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.98.0",
+    "typescript": "^5.8.3",
+    "vsce": "^2.15.0"
+  }
+}

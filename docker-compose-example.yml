@@ -1,0 +1,84 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - volk-ai-network
+    environment:
+      - BACKEND_URL=http://backend:8000
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - sandbox
+      - claw
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      #- ./mcp.json:/etc/mcp.json # Mount MCP servers directory
+    networks:
+      - volk-ai-network
+    environment:
+      # OpenRouter API base URL (default for VOLK AI)
+      - API_BASE=https://openrouter.ai/api/v1
+      # OpenRouter API key, replace with your own from https://openrouter.ai/keys
+      - API_KEY=sk-or-v1-xxxx
+      # Primary LLM model (minimax/minimax-m3 from OpenRouter)
+      - MODEL_NAME=minimax/minimax-m3
+      - MODEL_PROVIDER=openai
+      # LLM temperature parameter, controls randomness
+      #- TEMPERATURE=0.7
+      # Maximum tokens for LLM response
+      #- MAX_TOKENS=2000
+      # More configuration options: https://docs.volk-ai.com/#/configuration
+
+  sandbox:
+    build:
+      context: ./sandbox
+      dockerfile: Dockerfile
+    command: /bin/sh -c "exit 0"  # prevent sandbox from starting, ensure image is pulled
+    restart: "no"
+    networks:
+      - volk-ai-network
+
+  claw:
+    build:
+      context: ./claw
+      dockerfile: Dockerfile
+    entrypoint: /bin/sh -c "exit 0"  # prevent claw from starting, ensure image is pulled
+    restart: "no"
+    networks:
+      - volk-ai-network
+
+  mongodb:
+    image: mongo:7.0
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    #ports:
+    #  - "27017:27017"
+    networks:
+      - volk-ai-network
+
+  redis:
+    image: redis:7.0
+    restart: unless-stopped
+    networks:
+      - volk-ai-network
+
+volumes:
+  mongodb_data:
+    name: volk-ai-mongodb-data
+
+networks:
+  volk-ai-network:
+    name: volk-ai-network
+    driver: bridge

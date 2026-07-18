@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "paths": {
+      "@ai-agent/shared": ["./shared/src"],
+      "@ai-agent/shared/*": ["./shared/src/*"],
+      "@ai-agent/agent-core": ["./agent-core/src"],
+      "@ai-agent/agent-core/*": ["./agent-core/src/*"],
+      "@ai-agent/sandbox": ["./sandbox/src"],
+      "@ai-agent/sandbox/*": ["./sandbox/src/*"],
+      "@ai-agent/ext": ["./ext/src"],
+      "@ai-agent/ext/*": ["./ext/src/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "references": [
+    { "path": "./shared" },
+    { "path": "./agent-core" },
+    { "path": "./sandbox" },
+    { "path": "./ext" }
+  ]
+}

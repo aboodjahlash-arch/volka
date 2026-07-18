@@ -1,0 +1,84 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - volk-ai-network
+    environment:
+      - BACKEND_URL=http://backend:8000
+      - VITE_API_URL=http://localhost:8000
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - sandbox
+      - claw
+      - mongodb
+      - redis
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      #- ./mcp.json:/etc/mcp.json # Mount MCP servers directory
+    networks:
+      - volk-ai-network
+    env_file:
+      - .env
+    environment:
+      # Primary LLM (OpenRouter) - overridable via .env
+      - API_BASE=${API_BASE:-https://openrouter.ai/api/v1}
+      - API_KEY=${API_KEY}
+      - MODEL_NAME=${MODEL_NAME:-minimax/minimax-m3}
+      - MODEL_PROVIDER=${MODEL_PROVIDER:-openai}
+
+  sandbox:
+    image: volk-ai-sandbox:latest
+    build:
+      context: ./sandbox
+      dockerfile: Dockerfile
+    command: /bin/sh -c "exit 0"  # prevent sandbox from starting, ensure image is pulled
+    restart: "no"
+    networks:
+      - volk-ai-network
+
+  claw:
+    image: volk-ai/volk-ai-claw:latest
+    build:
+      context: ./claw
+      dockerfile: Dockerfile
+    entrypoint: /bin/sh -c "exit 0"  # prevent claw from starting, ensure image is pulled
+    restart: "no"
+    networks:
+      - volk-ai-network
+
+  mongodb:
+    image: mongo:7.0
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    #ports:
+    #  - "27017:27017"
+    networks:
+      - volk-ai-network
+
+  redis:
+    image: redis:7.0
+    restart: unless-stopped
+    networks:
+      - volk-ai-network
+
+volumes:
+  mongodb_data:
+    name: volk-ai-mongodb-data
+
+networks:
+  volk-ai-network:
+    name: volk-ai-network
+    driver: bridge

@@ -1,0 +1,109 @@
+{
+  "name": "ai-coding-agent",
+  "displayName": "AI Coding Agent",
+  "description": "AI-powered coding agent with inline AI edits, codebase-aware chat, and autonomous multi-step task execution. Powered by Gemini 2.5 Flash.",
+  "version": "1.0.0",
+  "publisher": "ai-agent",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ai-agent/ai-coding-agent"
+  },
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "coding",
+    "agent",
+    "gemini",
+    "autocomplete",
+    "chat"
+  ],
+  "icon": "icon.png",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiCodingAgent.openChat",
+        "title": "AI Coding Agent: Open Chat"
+      },
+      {
+        "command": "aiCodingAgent.explainCode",
+        "title": "AI Coding Agent: Explain Code"
+      },
+      {
+        "command": "aiCodingAgent.fixCode",
+        "title": "AI Coding Agent: Fix Code"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "aiCodingAgent",
+          "title": "AI Coding Agent",
+          "icon": "$(sparkle)"
+        }
+      ]
+    },
+    "views": {
+      "aiCodingAgent": [
+        {
+          "type": "webview",
+          "id": "aiCodingAgent.chat",
+          "name": "Chat"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "aiCodingAgent.openChat",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i"
+      }
+    ],
+    "configuration": {
+      "title": "AI Coding Agent",
+      "properties": {
+        "aiCodingAgent.geminiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Gemini API Key for AI Coding Agent. Alternatively, set GEMINI_API_KEY environment variable."
+        },
+        "aiCodingAgent.autonomousMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable autonomous mode for the AI agent (allows destructive actions without confirmation)"
+        },
+        "aiCodingAgent.maxStepsPerTask": {
+          "type": "number",
+          "default": 50,
+          "description": "Maximum number of steps for autonomous task execution"
+        },
+        "aiCodingAgent.inlineCompletions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable inline ghost-text completions"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -watch -p tsconfig.json",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.98.0",
+    "typescript": "^5.8.3"
+  }
+}
